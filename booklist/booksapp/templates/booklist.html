@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+        <h3>List of books</h3>
+                <form method="get">
+                        {{ filter.form.as_p }}
+                        <button type="submit">Search</button>
+                </form>
+                <ul>
+                        {% for book in filter.qs %}
+                                <li>{{ book.title }} - {{ book.author }} - {{ book.year_of_publication }} - {{ book.isbn }} - {{ book.pages }} - {{ book.language }} -  <img src={{book.link}} width="80" height="100"> </li>
+                        {% endfor %}
+                </ul>
+{% endblock %}
