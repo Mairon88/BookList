@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Book Manually</title>
+</head>
+<body>
+    <form method="post">
+        {{ book_form.as_p }}
+        {% csrf_token %}
+        <input class="save" type="submit" name="submit" alt="Submit"/>
+    </form>
+</body>
+</html>

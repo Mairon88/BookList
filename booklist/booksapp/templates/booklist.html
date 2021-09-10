@@ -4,13 +4,15 @@
 
 {% block content %}
         <h3>List of books</h3>
+        <a href="{% url 'add_book_manually' %}">Add book</a>
                 <form method="get">
                         {{ filter.form.as_p }}
                         <button type="submit">Search</button>
                 </form>
                 <ul>
                         {% for book in filter.qs %}
-                                <li>{{ book.title }} - {{ book.author }} - {{ book.year_of_publication }} - {{ book.isbn }} - {{ book.pages }} - {{ book.language }} -  <img src={{book.link}} width="80" height="100"> </li>
+                                <li>Title: {{ book.title }}, Author: {{ book.author }}, Year of publication: {{ book.year_of_publication }}, ISBN: {{ book.isbn }},Pages: {{ book.pages }}, Language: {{ book.language }},  <img src={{book.link}} width="80" height="100">, <a href="{{ book.get_absolute_url }}">Edit book</a></li>
                         {% endfor %}
                 </ul>
+
 {% endblock %}
