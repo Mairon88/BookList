@@ -3,13 +3,24 @@ from .filters import BooksFilter
 from .models import Book
 from .forms import BookForm
 from .functions import get_book_from_api
+from rest_framework import viewsets
+from .serializers import BookSerializer
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import JSONParser
+from rest_framework import generics
 
-# Create your views here.
 
 
 def list_of_book(request):
     books_list = Book.objects.all()
     books_filter = BooksFilter(request.GET, queryset=books_list)
+
+    if request.method == "POST" and request.POST.get('delete_items'):
+        items_to_delete = request.POST.getlist('delete_items')
+        Book.objects.filter(pk__in=items_to_delete).delete()
+        return redirect('/')
+
 
     return render(request, 'booklist.html',
                   {'filter': books_filter})
@@ -62,3 +73,32 @@ def import_books(request):
 
     return render(request, 'import_books.html',
                   {'keyword': keyword})
+
+
+
+class BookViewSet(viewsets.ReadOnlyModelViewSet):
+
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
+
+
+
+# @csrf_exempt
+# def books_rest_api(request):
+#     if request.method == 'GET':
+#         books = Book.objects.all()
+#         serializer = BookSerializer(books, many=True)
+#         return JsonResponse(serializer.data, safe=False)
+#
+#
+# @csrf_exempt
+# def books_rest_api_detail(request, pk):
+#     try:
+#         book = Book.objects.get(pk=pk)
+#     except Book.DoesNotExist:
+#         return HttpResponse(status=404)
+#
+#     if request.method == 'GET':
+#         serializer = BookSerializer(book)
+#         return JsonResponse(serializer.data)

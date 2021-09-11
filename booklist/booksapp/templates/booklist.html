@@ -8,6 +8,7 @@
         <a href="{% url 'import_books' %}">Import books from API</a>
                 <form method="get">
                         {{ filter.form.as_p }}
+                        {% csrf_token %}
                         <button type="submit">Search</button>
                 </form>
                 <ul>
@@ -16,7 +17,13 @@
                                         Year of publication: {{ book.year_of_publication }},
                                         ISBN: {{ book.isbn13 }},Pages: {{ book.pages }},
                                         Language: {{ book.language }},
-                                        <img src={{book.link}} width="80" height="100">, <a href="{{ book.get_absolute_url }}">Edit book</a></li>
+                                        <img src={{book.link}} width="80" height="100">,
+                                        <a href="{{ book.get_absolute_url }}">Edit book</a></li>
+                                         <form method="post">
+                                                <button name="delete_items" type="submit" value={{ book.pk }}>Delete book</button>
+                                                 {% csrf_token %}
+                                        </form>
+
                         {% endfor %}
                 </ul>
 
