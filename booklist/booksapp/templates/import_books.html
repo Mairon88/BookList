@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Import books from API</title>
+</head>
+<body>
+    <form method="get">
+        <input type="text" name="results" size="50" maxlength="50">
+        <input type="submit" value="submit">
+        {% csrf_token %}
+    </form>
+    <p>Input keyword to find books and click button to import all positions to your database</p>
+    {{ keyword }}
+</body>
+</html>

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .filters import BooksFilter
 from .models import Book
 from .forms import BookForm
+from .functions import get_book_from_api
 
 # Create your views here.
 
@@ -43,3 +44,21 @@ def edit_book(request, id):
 
     return render(request, 'edit_book.html',
                   {'book_form': book_form})
+
+def import_books(request):
+    keyword = ''
+    if request.method == 'GET' and request.GET.get('results'):
+        keyword = request.GET.get('results')
+        if keyword:
+            books_info = get_book_from_api(keyword)
+            for info in books_info:
+                book_obj = Book(title=info['title'], author=info['authors'], year_of_publication=info['date'],
+                                other_identifier=info['other_id'], isbn13=info['isbn13'], isbn10=info['isbn10'],
+                                pages=info['pages'], language=info['language'], link=info['img'])
+                book_obj.save()
+        return redirect('/')
+
+
+
+    return render(request, 'import_books.html',
+                  {'keyword': keyword})
