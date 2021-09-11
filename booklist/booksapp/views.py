@@ -9,6 +9,8 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from rest_framework import generics
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 
@@ -76,13 +78,17 @@ def import_books(request):
 
 
 
-class BookViewSet(viewsets.ReadOnlyModelViewSet):
+# class BookViewSet(viewsets.ReadOnlyModelViewSet):
+#
+#     queryset = Book.objects.all()
+#     serializer_class = BookSerializer
 
+
+class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-
-
-
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = BooksFilter
 
 # @csrf_exempt
 # def books_rest_api(request):

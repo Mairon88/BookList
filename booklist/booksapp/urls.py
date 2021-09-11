@@ -1,12 +1,10 @@
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from . import views
-from .views import BookViewSet
+from .views import BookListView
 
 
-book_list = BookViewSet.as_view({
-    'get': 'list'
-})
+book_list = BookListView.as_view()
 
 urlpatterns = [
     path('', views.list_of_book, name='list_of_books'),
