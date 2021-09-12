@@ -1,0 +1,29 @@
+
+/* CSS */
+
+body {
+        background-color: white;
+}
+
+.table{
+    text-align: center;
+}
+table {
+  width: 80%;
+}
+table, th, td {
+  border: 1px solid black;
+}
+
+
+th {
+  height: 70px;
+}
+
+td {
+  text-align: center;
+}
+
+.container table{
+	margin: auto;
+}

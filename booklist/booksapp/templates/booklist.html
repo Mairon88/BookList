@@ -3,28 +3,92 @@
 {% block title %}{% endblock %}
 
 {% block content %}
+
+        <ul>
+                <li><a href="{% url 'add_book_manually' %}">Add books</a></li>
+                <li><a href="{% url 'import_books' %}">Import books from API</a></li>
+                <li><a href="{% url 'book-list' %}">Check our API</a></li>
+        </ul>
         <h3>List of books</h3>
-        <a href="{% url 'add_book_manually' %}">Add book</a>
-        <a href="{% url 'import_books' %}">Import books from API</a>
+        <h4>Search and filter</h4>
                 <form method="get">
                         {{ filter.form.as_p }}
                         {% csrf_token %}
                         <button type="submit">Search</button>
                 </form>
-                <ul>
-                        {% for book in filter.qs %}
-                                <li>Title: {{ book.title }}, Author: {{ book.author }},
-                                        Year of publication: {{ book.year_of_publication }},
-                                        ISBN: {{ book.isbn13 }},Pages: {{ book.pages }},
-                                        Language: {{ book.language }},
-                                        <img src={{book.link}} width="80" height="100">,
-                                        <a href="{{ book.get_absolute_url }}">Edit book</a></li>
-                                         <form method="post">
-                                                <button name="delete_items" type="submit" value={{ book.pk }}>Delete book</button>
-                                                 {% csrf_token %}
-                                        </form>
+               <br>
+            <div class="container">
+                <table class="table">
+                            <thead>
+                              <tr>
+                                <th>TITLE</th>
+                                <th>AUTHORS</th>
+                                <th>YEAR OF PUBLICATION</th>
+                                <th>ISBN13</th>
+                                <th>ISBN10</th>
+                                <th>OTHER IDENTIFIER</th>
+                                <th>PAGES</th>
+                                <th>LANGUAGE</th>
+                                <th>COVER</th>
+                                <th>EDIT BOOKS</th>
+                                <th>DELETE BOOKS</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                {% for book in filter.qs %}
+                                        <tr>
+                                          <td>{{ book.title }}</td>
+                                          <td>{{ book.author }}</td>
+                                          <td>{% if book.year_of_publication != 0 %}
+                                                {{ book.year_of_publication }}
+                                              {% else %}
+                                                -
+                                              {% endif %}
+                                          </td>
+                                          <td>{% if book.isbn13 %}
+                                                {{ book.isbn13 }}
+                                              {% else %}
+                                                -
+                                              {% endif %}
+                                              </td>
+                                          <td>{% if book.isbn10 %}
+                                                {{ book.isbn10 }}
+                                              {% else %}
+                                                -
+                                              {% endif %}</td>
 
-                        {% endfor %}
-                </ul>
+                                          <td>{% if book.other_identifier %}
+                                                {{ book.other_identifier }}
+                                              {% else %}
+                                                -
+                                              {% endif %}</td>
+                                          <td>{% if book.pages != 0 %}
+                                                {{ book.pages }}
+                                              {% else %}
+                                                -
+                                              {% endif %}</td>
+                                          <td>{% if book.language %}
+                                                {{ book.language }}
+                                              {% else %}
+                                                -
+                                              {% endif %}</td>
+                                          <td>{% if book.link %}
+                                                        <img src={{book.link}} width="80" height="100">
+                                                {% else %}
+                                                        <img src="https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg" width="80" height="100">
+                                                {% endif %}
+                                          </td>
+                                                <td><a href="{{ book.get_absolute_url }}">Edit book</a></li></td>
+                                                <td>    <form method="post">
+                                                        <button name="delete_items" type="submit" value={{ book.pk }}>Delete book</button>
+                                                         {% csrf_token %}
+                                                        </form>
+                                                </td>
+                                        </tr>
+
+                                {% endfor %}
+                            </tbody>
+                </table>
+            </div>
 
 {% endblock %}

@@ -3,15 +3,10 @@ from .filters import BooksFilter
 from .models import Book
 from .forms import BookForm
 from .functions import get_book_from_api
-from rest_framework import viewsets
 from .serializers import BookSerializer
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
 from rest_framework import generics
-from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
-
+from requests.exceptions import ConnectionError
 
 
 def list_of_book(request):
@@ -60,28 +55,29 @@ def edit_book(request, id):
 
 def import_books(request):
     keyword = ''
+    message = ''
     if request.method == 'GET' and request.GET.get('results'):
         keyword = request.GET.get('results')
         if keyword:
-            books_info = get_book_from_api(keyword)
-            for info in books_info:
-                book_obj = Book(title=info['title'], author=info['authors'], year_of_publication=info['date'],
-                                other_identifier=info['other_id'], isbn13=info['isbn13'], isbn10=info['isbn10'],
-                                pages=info['pages'], language=info['language'], link=info['img'])
-                book_obj.save()
-        return redirect('/')
+            try:
+                books_info = get_book_from_api(keyword)
+                if books_info != []:
+                    for info in books_info:
+                        book_obj = Book(title=info['title'], author=info['authors'], year_of_publication=info['date'],
+                                        other_identifier=info['other_id'], isbn13=info['isbn13'], isbn10=info['isbn10'],
+                                        pages=info['pages'], language=info['language'], link=info['img'])
+                        book_obj.save()
+                    return redirect('/')
+                else:
+                    message = "Problem with importing data"
 
+            except ConnectionError:
+                message = "Problem with the internet connection"
 
 
     return render(request, 'import_books.html',
-                  {'keyword': keyword})
-
-
-
-# class BookViewSet(viewsets.ReadOnlyModelViewSet):
-#
-#     queryset = Book.objects.all()
-#     serializer_class = BookSerializer
+                  {'keyword': keyword,
+                   'message': message})
 
 
 class BookListView(generics.ListAPIView):
@@ -89,22 +85,3 @@ class BookListView(generics.ListAPIView):
     serializer_class = BookSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = BooksFilter
-
-# @csrf_exempt
-# def books_rest_api(request):
-#     if request.method == 'GET':
-#         books = Book.objects.all()
-#         serializer = BookSerializer(books, many=True)
-#         return JsonResponse(serializer.data, safe=False)
-#
-#
-# @csrf_exempt
-# def books_rest_api_detail(request, pk):
-#     try:
-#         book = Book.objects.get(pk=pk)
-#     except Book.DoesNotExist:
-#         return HttpResponse(status=404)
-#
-#     if request.method == 'GET':
-#         serializer = BookSerializer(book)
-#         return JsonResponse(serializer.data)

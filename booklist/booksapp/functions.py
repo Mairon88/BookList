@@ -32,9 +32,9 @@ def get_book_from_api(keyword):
 
         try:
             id = item['volumeInfo']['industryIdentifiers']
-            book_info.setdefault('other_id', "Unknown")
-            book_info.setdefault('isbn10', "Unknown")
-            book_info.setdefault('isbn13', "Unknown")
+            book_info.setdefault('other_id', None)
+            book_info.setdefault('isbn10', None)
+            book_info.setdefault('isbn13', None)
             for identifier in id:
                 if identifier['type'] == 'OTHER':
                     book_info['other_id'] = identifier['identifier']
@@ -53,7 +53,7 @@ def get_book_from_api(keyword):
         try:
             book_info.setdefault('language', item['volumeInfo']['language'])
         except KeyError:
-            book_info.setdefault('language', 'Unknown')
+            book_info.setdefault('language', None)
 
         try:
             book_info.setdefault('img', item['volumeInfo']['imageLinks']['thumbnail'])
