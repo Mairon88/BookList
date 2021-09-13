@@ -1,5 +1,6 @@
 import requests
 
+
 def get_book_from_api(keyword):
     url = f"https://www.googleapis.com/books/v1/volumes?q=search+{keyword}"
     get = requests.get(url)
@@ -31,11 +32,11 @@ def get_book_from_api(keyword):
             book_info.setdefault('date', 0)
 
         try:
-            id = item['volumeInfo']['industryIdentifiers']
+            idents = item['volumeInfo']['industryIdentifiers']
             book_info.setdefault('other_id', None)
             book_info.setdefault('isbn10', None)
             book_info.setdefault('isbn13', None)
-            for identifier in id:
+            for identifier in idents:
                 if identifier['type'] == 'OTHER':
                     book_info['other_id'] = identifier['identifier']
                 if identifier['type'] == 'ISBN_10':
@@ -44,7 +45,9 @@ def get_book_from_api(keyword):
                     book_info['isbn13'] = identifier['identifier']
 
         except KeyError:
-                pass
+            book_info.setdefault('other_id', None)
+            book_info.setdefault('isbn10', None)
+            book_info.setdefault('isbn13', None)
         try:
             book_info.setdefault('pages', item['volumeInfo']['pageCount'])
         except KeyError:
@@ -58,7 +61,9 @@ def get_book_from_api(keyword):
         try:
             book_info.setdefault('img', item['volumeInfo']['imageLinks']['thumbnail'])
         except KeyError:
-            book_info.setdefault('img', "https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg")
+            book_info.setdefault('img',
+                                 "https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-"
+                                 "available-icon-flat-vector-illustration-132482953.jpg")
 
         book_list.append(book_info)
 

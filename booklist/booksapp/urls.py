@@ -1,5 +1,4 @@
-from django.urls import path, include
-from django.contrib.auth import views as auth_views
+from django.urls import path
 from . import views
 from .views import BookListView
 
@@ -12,8 +11,4 @@ urlpatterns = [
     path('import_books', views.import_books, name='import_books'),
     path('<int:id>/', views.edit_book, name='edit_book'),
     path('api/', book_list, name='book-list'),
-
-
-
-
 ]

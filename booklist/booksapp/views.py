@@ -18,7 +18,6 @@ def list_of_book(request):
         Book.objects.filter(pk__in=items_to_delete).delete()
         return redirect('/')
 
-
     return render(request, 'booklist.html',
                   {'filter': books_filter})
 
@@ -53,6 +52,7 @@ def edit_book(request, id):
     return render(request, 'edit_book.html',
                   {'book_form': book_form})
 
+
 def import_books(request):
     keyword = ''
     message = ''
@@ -61,7 +61,8 @@ def import_books(request):
         if keyword:
             try:
                 books_info = get_book_from_api(keyword)
-                if books_info != []:
+
+                if books_info:
                     for info in books_info:
                         book_obj = Book(title=info['title'], author=info['authors'], year_of_publication=info['date'],
                                         other_identifier=info['other_id'], isbn13=info['isbn13'], isbn10=info['isbn10'],
@@ -73,7 +74,6 @@ def import_books(request):
 
             except ConnectionError:
                 message = "Problem with the internet connection"
-
 
     return render(request, 'import_books.html',
                   {'keyword': keyword,

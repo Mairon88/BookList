@@ -1,14 +1,12 @@
 from rest_framework import serializers
 from .models import Book
-from django.core.validators import RegexValidator, MinValueValidator
 
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = ['title', 'author', 'year_of_publication', 'isbn13', 'isbn10', 'other_identifier', 'pages', 'link',
-                 'language']
-
+                  'language']
 
     def create(self, validated_data):
         return Book.objects.create(validated_data)

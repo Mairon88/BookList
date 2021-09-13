@@ -1,9 +1,10 @@
 from django.test import TestCase, Client
 from django.urls import reverse, resolve
-from .views import list_of_book, add_book_manually, import_books, edit_book, BookListView
+from .views import list_of_book, add_book_manually, import_books
 from .models import Book
 from .functions import get_book_from_api
 from .forms import BookForm
+
 
 class BooksappTests(TestCase):
     # ============= test URLs ================
@@ -23,9 +24,10 @@ class BooksappTests(TestCase):
         book = Book.objects.get(id=1)
         self.assertEqual(book.get_absolute_url(), '/1/')
 
-
     # ============= test Views ================
+
     def test_view_list_of_book(self):
+
         client = Client()
         response = client.get(reverse('list_of_book'))
         self.assertEqual(response.status_code, 200)
@@ -43,6 +45,7 @@ class BooksappTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'import_books.html')
     #
+
     def test_view_edit_book(self):
         client = Client()
         book = Book.objects.get(id=1)
@@ -54,7 +57,7 @@ class BooksappTests(TestCase):
     def setUp(self):
         link = "https://tipsmake.com/data1/thumbs/how-to-extract-img-files-in-windows-10-thumb-bzxI4IDgg.jpg"
         self.book = Book.objects.create(title='title_1', author='author_1', year_of_publication='2021',
-                                   isbn13=1234567890123, pages=200, link=link, language='pl')
+                                        isbn13=1234567890123, pages=200, link=link, language='pl')
         keyword = 'Sonic'
         self.function = get_book_from_api(keyword)
 
@@ -84,7 +87,7 @@ class BooksappTests(TestCase):
             'title': "Test",
             'author': "Testowy",
             'year_of_publication': 2000,
-            'language':'en',
+            'language': 'en',
             'isbn13': 1234567890123,
         })
         self.assertTrue(form.is_valid())
@@ -94,7 +97,7 @@ class BooksappTests(TestCase):
             'title': "Test",
             'author': "Testowy",
             'year_of_publication': 2000,
-            'language':'en',
+            'language': 'en',
             'isbn13': 12345923,
         })
         self.assertFalse(form.is_valid())
@@ -104,7 +107,7 @@ class BooksappTests(TestCase):
             'title': "Test",
             'author': "Testowy",
             'year_of_publication': 2000,
-            'language':'en',
+            'language': 'en',
             'isbn10': 1234560789,
         })
         self.assertTrue(form.is_valid())
@@ -114,7 +117,7 @@ class BooksappTests(TestCase):
             'title': "Test",
             'author': "Testowy",
             'year_of_publication': 2000,
-            'language':'en',
+            'language': 'en',
             'isbn10': 1235,
         })
         self.assertFalse(form.is_valid())
@@ -124,7 +127,7 @@ class BooksappTests(TestCase):
             'title': "Test",
             'author': "Testowy",
             'year_of_publication': 2000,
-            'language':'en',
+            'language': 'en',
             'pages': 2,
         })
         self.assertFalse(form.is_valid())
@@ -134,7 +137,7 @@ class BooksappTests(TestCase):
             'title': "Test",
             'author': "Testowy",
             'year_of_publication': 2000,
-            'language':'en',
+            'language': 'en',
             'pages': 300,
         })
         self.assertTrue(form.is_valid())
